@@ -2,6 +2,9 @@
 
 namespace SAPLibrary\Builders;
 
+use SAPLibrary\Entities\SapAddressExtension;
+use SAPLibrary\Entities\SapInvoice;
+
 class SapInvoiceBuilder
 {
     private $cardCode;
