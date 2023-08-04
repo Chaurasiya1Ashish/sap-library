@@ -1,6 +1,6 @@
 <?php
 
-namespace SAPLibrary;
+namespace SAPLibrary\Builders;
 
 class SapInvoiceBuilder
 {

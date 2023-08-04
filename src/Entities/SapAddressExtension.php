@@ -1,5 +1,5 @@
 <?php
-namespace SAPLibrary;
+namespace SAPLibrary\Entities;
 
 class SapAddressExtension
 {

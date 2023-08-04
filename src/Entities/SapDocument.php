@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SAPLibrary;
+namespace SAPLibrary\Entities;
 
 use GuzzleHttp\Client;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace SAPLibrary;
+namespace SAPLibrary\Entities;
 
 class SapInvoice extends SapDocument
 {
