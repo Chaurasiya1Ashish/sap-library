@@ -1,6 +1,7 @@
 {
   "name": "vikasmahato/sap-library",
   "description": "A PHP library for SAP integration",
+  "version": "1.0.0",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -20,7 +21,7 @@
     "classmap": [
     ],
     "files": [
-      "src/SAPLibraryServiceProvider.php"
+      "src/Providers/SAPLibraryServiceProvider.php"
     ]
   },
   "autoload-dev": {

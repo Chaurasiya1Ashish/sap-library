@@ -1,34 +1,26 @@
 <?php
 
-namespace SAPLibrary;
+namespace SAPLibrary\Providers;
 
+use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Support\ServiceProvider;
 
 class SAPLibraryServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // Publish the configuration file
-        $this->publishes([
-            __DIR__ . '/../config/sap.php' => config_path('sap.php'),
-        ], 'config');
+        $source = realpath($raw = _DIR_.'/../config/sap.php') ?: $raw;
+
+        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
+            $this->publishes([$source => config_path('sap.php')]);
+        }
+
+        if ($this->app instanceof LaravelApplication && ! $this->app->configurationIsCached()) {
+            $this->mergeConfigFrom($source, 'sap');
+        }
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/sap.php', 'sap');
-
-        $this->app->bind(SAPSessionManager::class, function ($app) {
-            return new SAPSessionManager(
-                config('sap.domain'),
-                config('sap.sap_request_content')
-            );
-        });
-
-        $this->app->bind(SAPInvoiceCreator::class, function ($app) {
-            return new SAPInvoiceCreator(
-                $app->make(SAPSessionManager::class)
-            );
-        });
     }
 }
