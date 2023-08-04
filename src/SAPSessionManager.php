@@ -2,73 +2,55 @@
 
 namespace SAPLibrary;
 
-use Illuminate\Support\Facades\Cache;
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
 
 class SAPSessionManager
 {
-    protected $domain;
-    protected $sessionCookie;
+    private $domain;
+    private $db;
+    private $username;
+    private $password;
 
-    public function __construct(string $domain, array $requestContent)
+    public function __construct(array $sapConfig)
     {
-        $this->domain = $domain;
-        $this->sessionCookie = $this->retrieveSessionCookie();
+        $this->domain = $sapConfig['domain'] ?? '';
+        $this->db = $sapConfig['db'] ?? '';
+        $this->username = $sapConfig['username'] ?? '';
+        $this->password = $sapConfig['password'] ?? '';
     }
 
-    public function getSessionCookie(): ?string
+    public function retrieveSessionCookie()
     {
-        if (!$this->sessionCookie || $this->isSessionExpired()) {
-            $this->login();
+        // Check if the B1SESSION cookie is stored in the Laravel session
+        if (session()->has('B1SESSION')) {
+            return session('B1SESSION');
         }
 
-        return $this->sessionCookie;
+        // Make a request to SAP API to get the B1SESSION cookie
+        $url = "https://{$this->domain}/b1s/v1/Login";
+        $client = new Client();
+        $response = $client->post($url, [
+            'json' => [
+                'CompanyDB' => $this->db,
+                'UserName' => $this->username,
+                'Password' => $this->password,
+            ],
+        ]);
+
+        // Extract the B1SESSION cookie from the response
+        $cookieJar = CookieJar::fromResponse($response);
+        $b1session = $cookieJar->getCookieByName('B1SESSION')->getValue();
+
+        // Store the B1SESSION cookie in the Laravel session for future use
+        session(['B1SESSION' => $b1session]);
+
+        return $b1session;
     }
 
-    protected function isSessionExpired(): bool
+    public function storeSessionCookie($b1session)
     {
-        // Implement the logic to check if the session cookie is expired
-        // You can compare the cookie's expiration time with the current time
-        // Return true if the session is expired, false otherwise
-        return false;
-    }
-
-    protected function login(): void
-    {
-        try {
-            // Implement the logic to perform login and get the B1SESSION cookie
-            // You can use SAP API calls for the login process
-
-            // Example code to make a login API call (you need to customize it based on your SAP API)
-            $response = Http::post($this->domain . '/login', $this->getRequestContent());
-
-            if ($response->status() === 200) {
-                // Store the B1SESSION cookie
-                $this->sessionCookie = $response->header('Set-Cookie')[0];
-                $this->storeSessionCookie($this->sessionCookie);
-            } else {
-                throw new \Exception('Login failed');
-            }
-        } catch (\Exception $e) {
-            throw new \Exception('Error during login: ' . $e->getMessage());
-        }
-    }
-
-    protected function getRequestContent(): array
-    {
-        return [
-            'CompanyDB' => config('sap.sap_request_content.CompanyDB'),
-            'UserName' => config('sap.sap_request_content.UserName'),
-            'Password' => config('sap.sap_request_content.Password'),
-        ];
-    }
-
-    protected function retrieveSessionCookie(): ?string
-    {
-        return Cache::get('sap_session_cookie');
-    }
-
-    protected function storeSessionCookie(string $cookie): void
-    {
-        Cache::put('sap_session_cookie', $cookie, now()->addMinutes(30));
+        // Store the B1SESSION cookie in the Laravel session for future use
+        session(['B1SESSION' => $b1session]);
     }
 }

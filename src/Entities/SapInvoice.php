@@ -56,6 +56,6 @@ class SapInvoice extends SapDocument
 
     public static function getByFilter(array $filter): array
     {
-        // TODO: Implement getByFilter() method.
+        $document = parent::getByFilter($filter);
     }
 }
