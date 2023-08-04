@@ -16,7 +16,12 @@
   "autoload": {
     "psr-4": {
       "SAPLibrary\\": "src/"
-    }
+    },
+    "classmap": [
+    ],
+    "files": [
+      "src/SAPLibraryServiceProvider.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

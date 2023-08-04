@@ -1,6 +1,18 @@
-Build invoice using the following code
+# Initial COnfiguration
+Add the following to your env
 
+```
+SAP_DOMAIN=example.com
+SAP_DB=my_sap_database
+SAP_USERNAME=sap_user
+SAP_PASSWORD=secret_password
+```
 
+## Publish the Configuration File:
+
+you can use the `php artisan vendor:publish` command in your Laravel application to publish the `sap.php` configuration file from the SAPLibrary package to the Laravel application's config directory:
+
+``php artisan vendor:publish --tag=config``
 
 # Usage of SapInvoiceBuilder
 

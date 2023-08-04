@@ -48,7 +48,10 @@ class SapInvoice extends SapDocument
 
     public function save(): void
     {
-        // TODO: Implement save() method.
+        $sapDomain = config('sap.sap_domain');
+        $sapDB = config('sap.sap_db');
+        $sapUsername = config('sap.sap_username');
+        $sapPassword = config('sap.sap_password');
     }
 
     public static function getByFilter(array $filter): array
