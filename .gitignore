@@ -1,0 +1,25 @@
+# Ignore composer lock file
+composer.lock
+
+# Ignore vendor directory (dependency folder)
+/vendor/
+
+# Ignore IDE-specific files and folders
+/.idea/
+/.vscode/
+/.phpstorm.meta.php
+/.phpunit.result.cache
+/.phpunit.cache
+/.DS_Store
+
+# Ignore any other build files, logs, and temporary files
+/build/
+/logs/
+/public/storage/
+/storage/*.key
+.env
+.env.*
+.phpunit.result.cache
+.phpunit.cache
+
+# Add other files or directories to ignore as needed
